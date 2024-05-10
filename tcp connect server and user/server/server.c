@@ -5,233 +5,233 @@
 #include<winsock.h> 
 #include<time.h>
 
-/*·Å±¨´í£¬ÒıÈëÍ·ÎÄ¼ş*/
+/*é˜²æŠ¥é”™ï¼Œå¼•å…¥å¤´æ–‡ä»¶*/
 int main()
 {
-    char Sendbuf[100];                          /*·¢ËÍÊı¾İµÄ»º³åÇø*/
-    char Receivebuf[100];                       /*½ÓÊÕÊı¾İµÄ»º³åÇø*/
-    int SendLen;                                /*·¢ËÍÊı¾İµÄ³¤¶È*/
-    int ReceiveLen;                             /*½ÓÊÕÊı¾İµÄ³¤¶È*/
-    int Length;                                 /*±íÊ¾SOCKADDRµÄ´óĞ¡*/
-    unsigned short int Point;                   /*¶Ë¿ÚºÅ*/
-    int Check1;                                 /*Á´½ÓÊ§°ÜÖØÁ¬¼ì²é*/
-    char END[10] = "#END\0";                    /*´æ´¢½áÊø±êÖ¾×Ö·û*/
+    char Sendbuf[100];                          /*å‘é€æ•°æ®çš„ç¼“å†²åŒº*/
+    char Receivebuf[100];                       /*æ¥æ”¶æ•°æ®çš„ç¼“å†²åŒº*/
+    int SendLen;                                /*å‘é€æ•°æ®çš„é•¿åº¦*/
+    int ReceiveLen;                             /*æ¥æ”¶æ•°æ®çš„é•¿åº¦*/
+    int Length;                                 /*è¡¨ç¤ºSOCKADDRçš„å¤§å°*/
+    unsigned short int Point;                   /*ç«¯å£å·*/
+    int Check1;                                 /*é“¾æ¥å¤±è´¥é‡è¿æ£€æŸ¥*/
+    char END[10] = "#END\0";                    /*å­˜å‚¨ç»“æŸæ ‡å¿—å­—ç¬¦*/
 
-    SOCKET socket_server;                       /*¶¨ÒåÌ×½Ó×Ö*/
-    SOCKET socket_receive;                      /*ÓÃÓÚÁ´½ÓÌ×½Ó×Ö*/
+    SOCKET socket_server;                       /*å®šä¹‰å¥—æ¥å­—*/
+    SOCKET socket_receive;                      /*ç”¨äºé“¾æ¥å¥—æ¥å­—*/
 
-    SOCKADDR_IN Server_add;                     /*·şÎñÆ÷µØÖ·ĞÅÏ¢½á¹¹*/
-    SOCKADDR_IN Client_add;                     /*¿Í»§¶ËĞÅÏ¢µØÖ·½á¹¹*/
+    SOCKADDR_IN Server_add;                     /*æœåŠ¡å™¨åœ°å€ä¿¡æ¯ç»“æ„*/
+    SOCKADDR_IN Client_add;                     /*å®¢æˆ·ç«¯ä¿¡æ¯åœ°å€ç»“æ„*/
 
-    WORD wVersionRequested;                     /*×Ö£¨word£©£ºunsigned short*/
-    WSADATA wsaData;                            /*¿â°æ±¾ĞÅÏ¢½á¹¹*/
-    int error;                                  /*±íÊ¾´íÎó*/
+    WORD wVersionRequested;                     /*å­—ï¼ˆwordï¼‰ï¼šunsigned short*/
+    WSADATA wsaData;                            /*åº“ç‰ˆæœ¬ä¿¡æ¯ç»“æ„*/
+    int error;                                  /*è¡¨ç¤ºé”™è¯¯*/
 
-    FILE* fp;                                   /*ÎÄ¼şÖ¸Õë*/
-    struct tm* sysTime;                         /*ÏµÍ³Ê±¼äÖ¸Õë*/
+    FILE* fp;                                   /*æ–‡ä»¶æŒ‡é’ˆ*/
+    struct tm* sysTime;                         /*ç³»ç»Ÿæ—¶é—´æŒ‡é’ˆ*/
 
-    /*Ö¸¶¨¶Ë¿Ú*/
-t1: printf("ÇëÖ¸¶¨¶Ë¿ÚºÅ:");
+    /*æŒ‡å®šç«¯å£*/
+t1: printf("è¯·æŒ‡å®šç«¯å£å·:");
     scanf("%hu", &Point);
 
-    /*---------------------------³õÊ¼»¯Ì×½Ó×Ö¿â--------------------------------*/
+    /*---------------------------åˆå§‹åŒ–å¥—æ¥å­—åº“--------------------------------*/
 
-    /*¶¨Òå°æ±¾ÀàĞÍ¡£½«Á½¸ö×Ö½Ú×éºÏ³ÉÒ»¸ö×Ö£¬Ç°ÃæÊÇµÍ×Ö½Ú£¬ºóÃæÊÇ¸ß×Ö½Ú*/
-    wVersionRequested = MAKEWORD(2, 2);             /*¼ÓÔØÌ×½Ó×Ö¿â£¬³õÊ¼»¯ Ws232.dll¶¯Ì¬Á´½Ó¿â*/
+    /*å®šä¹‰ç‰ˆæœ¬ç±»å‹ã€‚å°†ä¸¤ä¸ªå­—èŠ‚ç»„åˆæˆä¸€ä¸ªå­—ï¼Œå‰é¢æ˜¯ä½å­—èŠ‚ï¼Œåé¢æ˜¯é«˜å­—èŠ‚*/
+    wVersionRequested = MAKEWORD(2, 2);             /*åŠ è½½å¥—æ¥å­—åº“ï¼Œåˆå§‹åŒ– Ws232.dllåŠ¨æ€é“¾æ¥åº“*/
     error = WSAStartup(wVersionRequested, &wsaData);
     if (error != 0)
     {
-        printf("¼ÓÔØÌ×½Ó×ÖÊ§°Ü£¡\n");
-        printf("³ÌĞòÍË³ö£¬°´ÈÎÒâ¼ü½áÊø\n");
+        printf("åŠ è½½å¥—æ¥å­—å¤±è´¥ï¼\n");
+        printf("ç¨‹åºé€€å‡ºï¼ŒæŒ‰ä»»æ„é”®ç»“æŸ\n");
         _getch();
-        return 0;                                    /*³ö´í£¬³ÌĞò½áÊø*/
+        return 0;                                    /*å‡ºé”™ï¼Œç¨‹åºç»“æŸ*/
     }
-    /*ÅĞ¶ÏÇëÇó¼ÓÔØµÄ°æ±¾ºÅÊÇ·ñ·ûºÏÒªÇó*/
+    /*åˆ¤æ–­è¯·æ±‚åŠ è½½çš„ç‰ˆæœ¬å·æ˜¯å¦ç¬¦åˆè¦æ±‚*/
     if (LOBYTE(wsaData.wVersion) != 2 || HIBYTE(wsaData.wVersion) != 2)
     {
-        printf("¼ÓÔØÌ×½Ó×ÖÊ§°Ü£¡\n");
-        WSACleanup();                               /*²»·ûºÏ£¬¹Ø±ÕÌ×½Ó×Ö¿â*/
-        printf("³ÌĞòÍË³ö£¬°´ÈÎÒâ¼ü½áÊø\n");
+        printf("åŠ è½½å¥—æ¥å­—å¤±è´¥ï¼\n");
+        WSACleanup();                               /*ä¸ç¬¦åˆï¼Œå…³é—­å¥—æ¥å­—åº“*/
+        printf("ç¨‹åºé€€å‡ºï¼ŒæŒ‰ä»»æ„é”®ç»“æŸ\n");
         _getch();
-        return 0;                                   /*°´ÈÎÒâ¼üÍË³ö*/
+        return 0;                                   /*æŒ‰ä»»æ„é”®é€€å‡º*/
     }
 
-    /*---------------------------------ÉèÖÃÁ¬½ÓµØÖ·----------------------------------*/
+    /*---------------------------------è®¾ç½®è¿æ¥åœ°å€----------------------------------*/
 
-    Server_add.sin_family = AF_INET;                             /*µØÖ·¼Ò×å£¬±ØĞëÊÇAF_INET,×¢ÒâÖ»ÓĞËü²»ÊÇÍøÂç×Ö½ÚË³Ğò*/
-    Server_add.sin_addr.S_un.S_addr = htonl(INADDR_ANY);         /*Ö÷»úµØÖ·*/
-    Server_add.sin_port = htons(Point);                          /*¶Ë¿ÚºÅ*/
-    /*AF_INET±íÊ¾Ö¸¶¨µØÖ·×å£¬SOCK_STREAM±íÊ¾Á÷Ê½Ì×½Ó×ÖTCP£¬ÌØ¶¨µÄµØÖ·¼Ò×åÏà¹ØµÄĞ­Òé*/
+    Server_add.sin_family = AF_INET;                             /*åœ°å€å®¶æ—ï¼Œå¿…é¡»æ˜¯AF_INET,æ³¨æ„åªæœ‰å®ƒä¸æ˜¯ç½‘ç»œå­—èŠ‚é¡ºåº*/
+    Server_add.sin_addr.S_un.S_addr = htonl(INADDR_ANY);         /*ä¸»æœºåœ°å€*/
+    Server_add.sin_port = htons(Point);                          /*ç«¯å£å·*/
+    /*AF_INETè¡¨ç¤ºæŒ‡å®šåœ°å€æ—ï¼ŒSOCK_STREAMè¡¨ç¤ºæµå¼å¥—æ¥å­—TCPï¼Œç‰¹å®šçš„åœ°å€å®¶æ—ç›¸å…³çš„åè®®*/
     socket_server = socket(AF_INET, SOCK_STREAM, 0);
-    /*---°ó¶¨Ì×½Ó×Öµ½±¾µØµÄÄ³¸öµØÖ·ºÍ¶Ë¿ÚÉÏ---*/
-    /*socket_ serverÎªÌ×½Ó×Ö£¬(SOCKADDR*)&Server_addÎª·şÎñÆ÷µØÖ·*/
+    /*---ç»‘å®šå¥—æ¥å­—åˆ°æœ¬åœ°çš„æŸä¸ªåœ°å€å’Œç«¯å£ä¸Š---*/
+    /*socket_ serverä¸ºå¥—æ¥å­—ï¼Œ(SOCKADDR*)&Server_addä¸ºæœåŠ¡å™¨åœ°å€*/
     if (bind(socket_server, (SOCKADDR*)&Server_add, sizeof(SOCKADDR)) == SOCKET_ERROR)
     {
-        printf("°ó¶¨Ê§°Ü\n");
-        printf("³ÌĞòÍË³ö£¬°´ÈÎÒâ¼ü½áÊø\n");
+        printf("ç»‘å®šå¤±è´¥\n");
+        printf("ç¨‹åºé€€å‡ºï¼ŒæŒ‰ä»»æ„é”®ç»“æŸ\n");
         _getch();                                       
         closesocket(socket_server);
         WSACleanup();
-        return 0;                                                 /*³ö´í£¬³ÌĞò½áÊø*/
+        return 0;                                                 /*å‡ºé”™ï¼Œç¨‹åºç»“æŸ*/
     }
 
-    /*----------------------------ÉèÖÃÌ×½Ó×ÖÎª¼àÌı×´Ì¬------------------------------*/
+    /*----------------------------è®¾ç½®å¥—æ¥å­—ä¸ºç›‘å¬çŠ¶æ€------------------------------*/
 
-    /*¼àÌı×´Ì¬£¬ÎªÁ¬½Ó×÷×¼±¸£¬×î´óµÈ´ıµÄÊıÄ¿Îª5*/
+    /*ç›‘å¬çŠ¶æ€ï¼Œä¸ºè¿æ¥ä½œå‡†å¤‡ï¼Œæœ€å¤§ç­‰å¾…çš„æ•°ç›®ä¸º5*/
     if (listen(socket_server, 5) < 0)
     {
-        printf("¼àÌıÊ§°Ü\n");
-        printf("³ÌĞòÍË³ö£¬°´ÈÎÒâ¼ü½áÊø\n");
+        printf("ç›‘å¬å¤±è´¥\n");
+        printf("ç¨‹åºé€€å‡ºï¼ŒæŒ‰ä»»æ„é”®ç»“æŸ\n");
         _getch();
         closesocket(socket_server);
         WSACleanup();
-        return 0;                                                 /*³ö´í£¬³ÌĞò½áÊø*/
+        return 0;                                                 /*å‡ºé”™ï¼Œç¨‹åºç»“æŸ*/
     }
 
-    /*----------------------------------½ÓÊÜÁ¬½Ó------------------------------------*/
+    /*----------------------------------æ¥å—è¿æ¥------------------------------------*/
 
- t2:printf("µÈ´ıÁ¬½ÓÖĞ\n");
+ t2:printf("ç­‰å¾…è¿æ¥ä¸­\n");
     Length = sizeof(SOCKADDR);
-    /*½ÓÊÜ¿Í»§¶ËµÄ·¢ËÍÇëÇó£¬µÈ´ı¿Í»§¶Ë·¢ËÍconnectÇëÇó*/
+    /*æ¥å—å®¢æˆ·ç«¯çš„å‘é€è¯·æ±‚ï¼Œç­‰å¾…å®¢æˆ·ç«¯å‘é€connectè¯·æ±‚*/
     socket_receive = accept(socket_server, (SOCKADDR*)&Client_add, &Length);
 
-    /*Á¬½ÓÒì³£Çé¿ö*/
+    /*è¿æ¥å¼‚å¸¸æƒ…å†µ*/
     if (socket_receive == SOCKET_ERROR)
     {
-        printf("Á¬½ÓÊ§°Ü! ÊÇ·ñÖØÖÃ·şÎñÆ÷£¿£¨Y£º1/N£º0£©\n");
+        printf("è¿æ¥å¤±è´¥! æ˜¯å¦é‡ç½®æœåŠ¡å™¨ï¼Ÿï¼ˆYï¼š1/Nï¼š0ï¼‰\n");
         scanf("%d", &Check1);
         if (Check1 == 1)
         {
             closesocket(socket_receive);
             closesocket(socket_server);
-            WSACleanup();                           /*ÊÍ·ÅÌ×½Ó×Ö£¬¹Ø±Õ¶¯Ì¬¿â*/
-            printf("·şÎñÆ÷ÖØÖÃ³É¹¦");
-            goto t1;                                /*ÖØÖÃ·şÎñÆ÷*/
+            WSACleanup();                           /*é‡Šæ”¾å¥—æ¥å­—ï¼Œå…³é—­åŠ¨æ€åº“*/
+            printf("æœåŠ¡å™¨é‡ç½®æˆåŠŸ");
+            goto t1;                                /*é‡ç½®æœåŠ¡å™¨*/
         }
         else
         {
-            printf("³ÌĞòÍË³ö£¬°´ÈÎÒâ¼ü½áÊø\n");
+            printf("ç¨‹åºé€€å‡ºï¼ŒæŒ‰ä»»æ„é”®ç»“æŸ\n");
             _getch();
             closesocket(socket_receive);
             closesocket(socket_server);
-            WSACleanup();                           /*ÊÍ·ÅÌ×½Ó×Ö£¬¹Ø±Õ¶¯Ì¬¿â*/
-            return 0;                               /*³ÌĞò½áÊø*/
+            WSACleanup();                           /*é‡Šæ”¾å¥—æ¥å­—ï¼Œå…³é—­åŠ¨æ€åº“*/
+            return 0;                               /*ç¨‹åºç»“æŸ*/
         }
     }
     else {
-        printf("Á¬½Ó³É¹¦!\n(ÇëÓÃ_´úÌæ¿Õ¸ñ,°´#END½áÊø»á»°)\n");
-        fp = fopen("ServerData.txt", "a");          /*´ò¿ªÈÕÖ¾ÎÄ¼ş*/
+        printf("è¿æ¥æˆåŠŸ!\n(è¯·ç”¨_ä»£æ›¿ç©ºæ ¼,æŒ‰#ENDç»“æŸä¼šè¯)\n");
+        fp = fopen("ServerData.txt", "a");          /*æ‰“å¼€æ—¥å¿—æ–‡ä»¶*/
         time_t nowTime;
         time(&nowTime);
-        sysTime = localtime(&nowTime);              /*»ñÈ¡ÏµÍ³Ê±¼ä*/
+        sysTime = localtime(&nowTime);              /*è·å–ç³»ç»Ÿæ—¶é—´*/
 
-        fprintf(fp, "\n\n%d-%d-%d\t%d:%d:%d\n¶Ë¿Ú:%u\n", 1900 + sysTime->tm_year, sysTime->tm_mon + 1, sysTime->tm_mday,
+        fprintf(fp, "\n\n%d-%d-%d\t%d:%d:%d\nç«¯å£:%u\n", 1900 + sysTime->tm_year, sysTime->tm_mon + 1, sysTime->tm_mday,
             sysTime->tm_hour, sysTime->tm_min, sysTime->tm_sec, Point);
     }
-    /*--------------------------------½øĞĞÁÄÌì--------------------------------------*/
+    /*--------------------------------è¿›è¡ŒèŠå¤©--------------------------------------*/
     while (1)
     {
-        /*½ÓÊÕÊı¾İ*/
+        /*æ¥æ”¶æ•°æ®*/
         ReceiveLen = recv(socket_receive, Receivebuf, 100, 0);
         if (ReceiveLen < 0)
         {
-            printf("½ÓÊÕÊ§°Ü£¡ÊÇ·ñÖØÖÃ·şÎñÆ÷£¿£¨Y£º1/N£º0/WAIT£º2£©\n");
+            printf("æ¥æ”¶å¤±è´¥ï¼æ˜¯å¦é‡ç½®æœåŠ¡å™¨ï¼Ÿï¼ˆYï¼š1/Nï¼š0/WAITï¼š2ï¼‰\n");
             scanf("%d", &Check1);
             if (Check1 == 1)
             {
                 closesocket(socket_receive);
                 closesocket(socket_server);
                 WSACleanup();
-                printf("·şÎñÆ÷ÖØÖÃ³É¹¦!\n");
-                goto t1;                                        /*ÖØÖÃ·şÎñÆ÷*/
+                printf("æœåŠ¡å™¨é‡ç½®æˆåŠŸ!\n");
+                goto t1;                                        /*é‡ç½®æœåŠ¡å™¨*/
             }
             else if (Check1 == 2)
-                goto t2;                                        /*·µ»ØµÈ´ı*/
+                goto t2;                                        /*è¿”å›ç­‰å¾…*/
             else
             {
-                printf("³ÌĞòÍË³ö£¬°´ÈÎÒâ¼ü½áÊø\n");
+                printf("ç¨‹åºé€€å‡ºï¼ŒæŒ‰ä»»æ„é”®ç»“æŸ\n");
                 _getch();
-                break;                                          /*°´ÈÎÒâ¼üÍË³ö*/
+                break;                                          /*æŒ‰ä»»æ„é”®é€€å‡º*/
             }
         }
         else
         {
-            /*¼ì²âÊÇ·ñÎª½áÊø»á»°ĞÅÏ¢*/
-            if (strcmp(Receivebuf, "»á»°ÒÑ½áÊø") == 0)
+            /*æ£€æµ‹æ˜¯å¦ä¸ºç»“æŸä¼šè¯ä¿¡æ¯*/
+            if (strcmp(Receivebuf, "ä¼šè¯å·²ç»“æŸ") == 0)
             {
-                printf("»á»°ÒÑ½áÊø,ÊÇ·ñÖØÖÃ·şÎñÆ÷£¿£¨Y£º1/N£º0/WAIT£º2£©\n");
+                printf("ä¼šè¯å·²ç»“æŸ,æ˜¯å¦é‡ç½®æœåŠ¡å™¨ï¼Ÿï¼ˆYï¼š1/Nï¼š0/WAITï¼š2ï¼‰\n");
                 scanf("%d", &Check1);
                 if (Check1 == 1)
                 {
                     closesocket(socket_receive);
                     closesocket(socket_server);
                     WSACleanup();
-                    printf("·şÎñÆ÷ÖØÖÃ³É¹¦");
-                    goto t1;                                    /*ÖØÖÃ·şÎñÆ÷*/
+                    printf("æœåŠ¡å™¨é‡ç½®æˆåŠŸ");
+                    goto t1;                                    /*é‡ç½®æœåŠ¡å™¨*/
                 }
                 else if (Check1 == 2)
-                    goto t2;                                    /*·µ»ØµÈ´ı*/
+                    goto t2;                                    /*è¿”å›ç­‰å¾…*/
                 else
                 {
-                    printf("³ÌĞòÍË³ö£¬°´ÈÎÒâ¼ü½áÊø\n");
+                    printf("ç¨‹åºé€€å‡ºï¼ŒæŒ‰ä»»æ„é”®ç»“æŸ\n");
                     _getch();
-                    break;                                      /*°´ÈÎÒâ¼üÍË³ö*/
+                    break;                                      /*æŒ‰ä»»æ„é”®é€€å‡º*/
                 }
             }
-            /*Õı³£Çé¿ö£¬Êä³öĞÅÏ¢£¬Ğ´ÈëÈÕÖ¾*/
+            /*æ­£å¸¸æƒ…å†µï¼Œè¾“å‡ºä¿¡æ¯ï¼Œå†™å…¥æ—¥å¿—*/
             else
             {
                 printf("Client say: %s\n", Receivebuf);
                 fprintf(fp, "Client say:%s\n", Receivebuf);
             }
-            /*·¢ËÍÊı¾İ*/
+            /*å‘é€æ•°æ®*/
             printf("please enter message:");
-            scanf("%s", Sendbuf);                                   /*¶ÁÈ¡ÓÃ»§ÊäÈëµÄĞÅÏ¢*/
+            scanf("%s", Sendbuf);                                   /*è¯»å–ç”¨æˆ·è¾“å…¥çš„ä¿¡æ¯*/
 
-            strcat(Sendbuf, "\0");                                  /*Ìí¼Ó×Ö·û´®½áÊø·û*/
+            strcat(Sendbuf, "\0");                                  /*æ·»åŠ å­—ç¬¦ä¸²ç»“æŸç¬¦*/
 
             if (strcmp(Sendbuf, END) == 0)
             {
-                printf("»á»°ÒÑ½áÊø,°´ÈÎÒâ¼ü½áÊø\n");
-                fprintf(fp, "»á»°ÒÑ½áÊø");                           /*Ğ´ÈëÈÕÖ¾*/
-                strcpy(Sendbuf, "»á»°ÒÑ½áÊø\0");                     /*ÖØÖÃ´ı·¢ËÍĞÅÏ¢*/
-                SendLen = send(socket_receive, Sendbuf, 100, 0);     /*·¢ËÍ½áÊøĞÅÏ¢*/
+                printf("ä¼šè¯å·²ç»“æŸ,æŒ‰ä»»æ„é”®ç»“æŸ\n");
+                fprintf(fp, "ä¼šè¯å·²ç»“æŸ");                           /*å†™å…¥æ—¥å¿—*/
+                strcpy(Sendbuf, "ä¼šè¯å·²ç»“æŸ\0");                     /*é‡ç½®å¾…å‘é€ä¿¡æ¯*/
+                SendLen = send(socket_receive, Sendbuf, 100, 0);     /*å‘é€ç»“æŸä¿¡æ¯*/
                 _getch();
-                break;                                               /*°´ÈÎÒâ¼üÍË³ö*/
+                break;                                               /*æŒ‰ä»»æ„é”®é€€å‡º*/
             }
 
-            fprintf(fp, "Server say: %s\n", Sendbuf);                /*Ğ´ÈëÈÕÖ¾*/
+            fprintf(fp, "Server say: %s\n", Sendbuf);                /*å†™å…¥æ—¥å¿—*/
 
-            SendLen = send(socket_receive, Sendbuf, 100, 0);         /*·¢ËÍÊı¾İ*/
+            SendLen = send(socket_receive, Sendbuf, 100, 0);         /*å‘é€æ•°æ®*/
             if (SendLen < 0)
             {
-                printf("·¢ËÍÊ§°Ü£¡ÊÇ·ñÖØÖÃ·şÎñÆ÷£¿£¨Y£º1/N£º0/WAIT£º2£©\n");
+                printf("å‘é€å¤±è´¥ï¼æ˜¯å¦é‡ç½®æœåŠ¡å™¨ï¼Ÿï¼ˆYï¼š1/Nï¼š0/WAITï¼š2ï¼‰\n");
                 scanf("%d", &Check1);
                 if (Check1 == 1)
                 {
                     closesocket(socket_receive);
                     closesocket(socket_server);
-                    WSACleanup();                                    /*ÊÍ·ÅÌ×½Ó×Ö£¬¹Ø±Õ¶¯Ì¬¿â*/
-                    printf("·şÎñÆ÷ÖØÖÃ³É¹¦");
-                    goto t1;                                         /*ÖØÖÃ·şÎñÆ÷*/
+                    WSACleanup();                                    /*é‡Šæ”¾å¥—æ¥å­—ï¼Œå…³é—­åŠ¨æ€åº“*/
+                    printf("æœåŠ¡å™¨é‡ç½®æˆåŠŸ");
+                    goto t1;                                         /*é‡ç½®æœåŠ¡å™¨*/
                 }
                 else if (Check1 == 2)
-                    goto t2;                                         /*·µ»ØµÈ´ı*/
+                    goto t2;                                         /*è¿”å›ç­‰å¾…*/
                 else
                 {
-                    printf("³ÌĞòÍË³ö£¬°´ÈÎÒâ¼ü½áÊø\n");
+                    printf("ç¨‹åºé€€å‡ºï¼ŒæŒ‰ä»»æ„é”®ç»“æŸ\n");
                     _getch();
-                    break;                                           /*°´ÈÎÒâ¼üÍË³ö*/
+                    break;                                           /*æŒ‰ä»»æ„é”®é€€å‡º*/
                 }
             }
         }
     }
 
-    /*--------------------------------½áÊø½×¶Î----------------------------------*/
+    /*--------------------------------ç»“æŸé˜¶æ®µ----------------------------------*/
 
-    /*ÊÍ·ÅÌ×½Ó×Ö£¬¹Ø±Õ¶¯Ì¬¿â*/
+    /*é‡Šæ”¾å¥—æ¥å­—ï¼Œå…³é—­åŠ¨æ€åº“*/
     closesocket(socket_receive);
     closesocket(socket_server);
     WSACleanup();
-    return 0;                /*½áÊø³ÌĞò*/
+    return 0;                /*ç»“æŸç¨‹åº*/
 }
